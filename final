@@ -1,0 +1,348 @@
+
+import java.util.Scanner;
+
+public class Chinawok {
+
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        menuDeInicio(sc);
+    }
+
+    public static void menuDeInicio(Scanner sc){
+        boolean salir = false;
+        while(!salir){
+            System.out.println("_-CHINAWOK_-");
+            System.out.println("1.- Iniciar Sesion");
+            System.out.println("2.- Registrarse");
+            System.out.println("3.- Entrar como invitado");
+            System.out.println("4.- Salir");
+            System.out.print("Seleccione una opción: ");
+
+            int opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch(opcion){
+                case 1:
+                    if (inicioSesion(sc)) {
+                        menuPrincipal(sc);
+                    }
+                    break;
+                case 2:
+                    if (registrarse(sc)) {
+                        menuPrincipal(sc);
+                    }
+                    break;
+                case 3:
+                    System.out.println("Entraste como invitado.");
+                    menuPrincipal(sc);
+                    break;
+                case 4:
+                    System.out.println("Saliendo...");
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opcion invalida");
+                    break;
+            }
+        }
+    }
+
+    public static boolean inicioSesion(Scanner sc){
+        boolean inicioSesionExitoso = false;
+        do{
+            System.out.println("_-INICIAR SESION_-");
+            System.out.println("Ingrese correo:");
+            String correo = sc.nextLine();
+
+            System.out.println("Ingrese su contraseña:");
+            String contraseña = sc.nextLine();
+
+            boolean condicionesCorreoU = correo.contains("@") && correo.endsWith(".con");
+            boolean condicionesContraseñaU = contraseña.length() >= 8 &&
+                    (contraseña.contains("#") || contraseña.contains("I") ||
+                            contraseña.contains("Q") || contraseña.contains("@"));
+
+            if(!condicionesCorreoU || !condicionesContraseñaU){
+                System.out.println("No ha sido posible iniciar sesión, vuelve a intentarlo");
+                if(!condicionesCorreoU){
+                    System.out.println("Su correo debe contener @ y terminar en .con");
+                }
+                if(!condicionesContraseñaU){
+                    System.out.println("Contraseña debe tener +8 caracteres y uno de: #,I,Q,@");
+                }
+
+                System.out.println("¿Desea cancelar? (si/no)");
+                String cancelar = sc.nextLine();
+                if(cancelar.equalsIgnoreCase("si")){
+                    break;
+                }
+                continue;
+            }
+
+            if(correo.equals("chinawok@gmail.con") && contraseña.equals("87651234Q")){
+                System.out.println("Inicio de sesion exitoso");
+                inicioSesionExitoso = true;
+            } else {
+                System.out.println("Credenciales no validas");
+            }
+
+        } while(!inicioSesionExitoso);
+
+        return inicioSesionExitoso;
+    }
+
+    public static boolean registrarse(Scanner sc){
+        boolean registrado = false;
+        do{
+            System.out.println("_-REGISTRARSE_-");
+            System.out.println("Ingrese sus nombres:");
+            String nombre = sc.nextLine();
+
+            System.out.println("Ingrese sus apellidos:");
+            String apellidos = sc.nextLine();
+
+            System.out.println("Ingrese su DNI:");
+            String dni = sc.nextLine();
+
+            System.out.println("Ingrese su numero de celular:");
+            String celular = sc.nextLine();
+
+            System.out.println("Ingrese correo:");
+            String correo = sc.nextLine();
+
+            System.out.println("Ingrese su contraseña:");
+            String contraseña = sc.nextLine();
+
+            boolean verificacionDniU = dni.length() == 8;
+            boolean verificacionCelularU = celular.length() == 9;
+            boolean verificacionCorreoU = correo.contains("@") && correo.endsWith(".con");
+            boolean verificacionContraseñaU = contraseña.length() >= 8 &&
+                    (contraseña.contains("#") || contraseña.contains("I") ||
+                            contraseña.contains("Q") || contraseña.contains("@"));
+
+            if(!verificacionDniU || !verificacionCelularU || !verificacionCorreoU || !verificacionContraseñaU){
+                System.out.println("No ha sido posible registrarse, vuelve a intentarlo");
+                if(!verificacionDniU){
+                    System.out.println("DNI debe tener 8 caracteres");
+                }
+
+                if(!verificacionCelularU){
+                    System.out.println("Celular debe tener 9 caracteres");
+                }
+                if(!verificacionCorreoU){
+                    System.out.println("Correo debe contener @ y terminar en .con");
+                }
+                if(!verificacionContraseñaU){
+                    System.out.println("Contraseña debe tener +8 caracteres y uno de: #,I,Q,@");
+                }
+
+                System.out.println("¿Desea cancelar? (si/no)");
+                String cancelar = sc.nextLine();
+                if(cancelar.equalsIgnoreCase("si")){
+                    break;
+                }
+                continue;
+            }
+
+            System.out.println("Has sido registrado exitosamente");
+            registrado = true;
+
+        } while(!registrado);
+
+        return registrado;
+    }
+
+    public static void menuPrincipal(Scanner sc) {
+        int opcion;
+        do {
+            System.out.println("===== MENU PRINCIPAL =====");
+            System.out.println("1. Combos personales");
+            System.out.println("2. Para compartir");
+            System.out.println("3. Promos familiares");
+            System.out.println("4. Los más vendidos");
+            System.out.println("5. Datos del cliente");
+            System.out.println("6. Cerrar Sesión / Volver");
+
+            System.out.print("Seleccione una opción: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    combosPersonales(sc);
+                    break;
+                case 2:
+                    paraCompartir(sc);
+                    break;
+                case 3:
+                    promosFamiliares(sc);
+                    break;
+                case 4:
+                    masVendidos(sc);
+                    break;
+                case 5:
+                    datosCliente(sc);
+                    break;
+                case 6:
+                    System.out.println("Regresando al menú de inicio...");
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+            }
+        } while (opcion != 6);
+    }
+
+    public static void combosPersonales(Scanner sc) {
+        String[] productos = {
+                "Arroz Chaufa", "Tallarin Saltado", "Pollo Agridulce", "Pollo Broaster", "Wantan Frito",
+                "Aeropuerto", "Lomo Saltado", "Sopa Wantan", "Pollo Oriental", "Arroz Especial"
+        };
+        double[] precios = { 15, 18, 20, 17, 10, 22, 25, 12, 19, 21 };
+        mostrarProductos(sc, productos, precios);
+    }
+
+    public static void paraCompartir(Scanner sc) {
+        String[] productos = {
+                "Combo Duo", "Combo Trio", "Caja Familiar", "Combo Fiesta", "Pack Broaster",
+                "Pack Oriental", "Mega Combo", "Pack Chaufa", "Combo Amigos", "Combo Deluxe"
+        };
+        double[] precios = { 30, 45, 55, 70, 40, 50, 80, 35, 60, 90 };
+        mostrarProductos(sc, productos, precios);
+    }
+
+    public static void promosFamiliares(Scanner sc) {
+        String[] productos = {
+                "Promo Familiar 1", "Promo Familiar 2", "Promo Familiar 3", "Promo Familiar 4", "Promo Familiar 5",
+                "Promo Familiar 6", "Promo Familiar 7", "Promo Familiar 8", "Promo Familiar 9", "Promo Familiar 10"
+        };
+        double[] precios = { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140 };
+        mostrarProductos(sc, productos, precios);
+    }
+
+    public static void masVendidos(Scanner sc) {
+        String[] productos = {
+                "Chaufa Especial", "Pollo Broaster", "Tallarin Oriental", "Wantan", "Sopa Especial",
+                "Combo 1", "Combo 2", "Combo 3", "Combo 4", "Combo 5"
+        };
+        double[] precios = { 25, 18, 20, 10, 15, 30, 35, 40, 45, 50 };
+        mostrarProductos(sc, productos, precios);
+    }
+
+    public static void mostrarProductos(Scanner sc, String[] productos, double[] precios) {
+        int opcion;
+        int cantidad;
+        double total;
+
+        System.out.println("===== PRODUCTOS =====");
+        for (int i = 0; i < productos.length; i++) {
+            System.out.println((i + 1) + ". " + productos[i] + " - S/ " + precios[i]);
+        }
+
+        System.out.print("Seleccione un producto: ");
+        opcion = sc.nextInt();
+        sc.nextLine();
+
+        if (opcion >= 1 && opcion <= productos.length) {
+            System.out.print("Ingrese cantidad: ");
+            cantidad = sc.nextInt();
+            sc.nextLine();
+
+            total = precios[opcion - 1] * cantidad;
+            String productoSeleccionado = productos[opcion - 1];
+            double precioUnidad = precios[opcion - 1];
+
+            int metodoPago;
+            String metodoStr = "";
+            boolean pagoValido = false;
+
+            do {
+                System.out.println("--- SELECCIONE MÉTODO DE PAGO ---");
+                System.out.println("1. Efectivo (Pago en caja)");
+                System.out.println("2. Tarjeta de Crédito / Débito");
+                System.out.println("3. Yape / Plin (Billetera Digital)");
+                System.out.print("Seleccione una opción: ");
+                metodoPago = sc.nextInt();
+                sc.nextLine();
+
+                switch (metodoPago) {
+                    case 1:
+                        metodoStr = "Efectivo";
+                        pagoValido = true;
+                        break;
+                    case 2:
+                        metodoStr = "Tarjeta";
+                        pagoValido = true;
+                        break;
+                    case 3:
+                        metodoStr = "Yape/Plin";
+                        pagoValido = true;
+                        break;
+                    default:
+                        System.out.println("Opción no válida.");
+                        break;
+                }
+            } while (!pagoValido);
+
+            System.out.println("====================================");
+            System.out.println("     BOLETA DE VENTA - CHINAWOK     ");
+            System.out.println("====================================");
+            System.out.println("Producto: " + productoSeleccionado);
+            System.out.println("Cantidad: " + cantidad);
+            System.out.println("Precio Unitario: S/ " + precioUnidad);
+            System.out.println("------------------------------------");
+            System.out.println("TOTAL A PAGAR: S/ " + total);
+            System.out.println("Método de pago: " + metodoStr);
+            System.out.println("Fecha de emisión: 29/05/2026");
+            System.out.println("====================================");
+            System.out.println("¡Gracias por su compra en ChinaWok!");
+            System.out.println("====================================");
+
+        } else {
+            System.out.println("Producto inválido");
+        }
+    }
+
+    public static void datosCliente(Scanner sc) {
+        String correo;
+        String nombre;
+        String apellido;
+        String dni;
+        String telefono;
+        int tienda;
+
+        System.out.println("===== DATOS DEL CLIENTE =====");
+
+        System.out.print("Correo: ");
+        correo = sc.nextLine();
+
+        System.out.print("Nombre: ");
+        nombre = sc.nextLine();
+
+        System.out.print("Apellido: ");
+        apellido = sc.nextLine();
+
+        System.out.print("DNI: ");
+        dni = sc.nextLine();
+
+        System.out.print("Telefono: ");
+        telefono = sc.nextLine();
+
+        System.out.println("Seleccione tienda:");
+        System.out.println("1. Chinawok Juliaca Centro");
+        System.out.println("2. Chinawok Real Plaza");
+        System.out.println("3. Chinawok Plaza Vea");
+        System.out.println("4. Chinawok Mall");
+        System.out.println("5. Chinawok Terminal");
+        System.out.print("Seleccione una opción: ");
+
+        tienda = sc.nextInt();
+        sc.nextLine();
+
+        System.out.println("===== RESUMEN =====");
+        System.out.println("Correo: " + correo);
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Apellido: " + apellido);
+        System.out.println("DNI: " + dni);
+        System.out.println("Número de Tienda seleccionada: " + tienda);
+    }
+}
