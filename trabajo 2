@@ -1,0 +1,729 @@
+import java.util.Scanner;
+
+public class Chinawok2 {
+
+    public static String productoNombre = "";
+    public static double productoPrecio = 0.0;
+    public static int cantidadLlevar = 0;
+
+    public static String clienteNombre = "";
+    public static String clienteApellido = "";
+    public static String clienteDni = "";
+    public static String clienteDireccion = "";
+    public static String clienteTelefono = "";
+    public static String clienteCorreo = "";
+
+    public static double subtotalCompra = 0.0;
+    public static double totalPagar = 0.0;
+
+    public static String tiendaSeleccionada = "";
+    public static String metodoPagoSeleccionado = "";
+    public static double montoPagadoCon = 0.0;
+    public static double vueltoEntregar = 0.0;
+
+    public static String usuarioLogueado = "Invitado";
+
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        menuDeInicio(sc);
+    }
+
+
+    public static boolean inicioSesion(Scanner sc){
+        boolean inicioSesionExitoso = false;
+        do{
+            System.out.println("_-INICIAR SESION_-");
+            System.out.println("Ingrese correo:");
+            String correo = sc.nextLine();
+
+            System.out.println("Ingrese su contraseña:");
+            String contraseña = sc.nextLine();
+
+            boolean condicionesCorreoU = correo.contains("@") && correo.endsWith(".con");
+            boolean condicionesContraseñaU = contraseña.length() >= 8 &&
+                    (contraseña.contains("#") || contraseña.contains("I") ||
+                            contraseña.contains("Q") || contraseña.contains("@"));
+
+            if(!condicionesCorreoU || !condicionesContraseñaU){
+                System.out.println("No ha sido posible iniciar sesión, vuelve a intentarlo");
+                if(!condicionesCorreoU){
+                    System.out.println("Su correo debe contener @ y terminar en .con");
+                }
+                if(!condicionesContraseñaU){
+                    System.out.println("Contraseña debe tener +8 caracteres y uno de: #,I,Q,@");
+                }
+
+                System.out.println("¿Desea cancelar? (si/no)");
+                String cancelar = sc.nextLine();
+                if(cancelar.equalsIgnoreCase("si")){
+                    break;
+                }
+                continue;
+            }
+
+            if(correo.equals("chinawok@gmail.con") && contraseña.equals("123456789")){
+                System.out.println("Inicio de sesion exitoso");
+                usuarioLogueado = "Cliente Logueado (chinawok@gmail.con)";
+                clienteCorreo = correo;
+                inicioSesionExitoso = true;
+            } else {
+                System.out.println("Credenciales no validas");
+            }
+
+        } while(!inicioSesionExitoso);
+
+        return inicioSesionExitoso;
+    }
+
+    public static boolean registrarse(Scanner sc){
+        boolean registrado = false;
+        do{
+            System.out.println("_-REGISTRARSE_-");
+            System.out.println("Ingrese sus nombres:");
+            String nombre = sc.nextLine();
+
+            System.out.println("Ingrese sus apellidos:");
+            String apellidos = sc.nextLine();
+
+            System.out.println("Ingrese su DNI:");
+            String dni = sc.nextLine();
+
+            System.out.println("Ingrese su numero de celular:");
+            String celular = sc.nextLine();
+
+            System.out.println("Ingrese correo:");
+            String correo = sc.nextLine();
+
+            System.out.println("Ingrese su contraseña:");
+            String contraseña = sc.nextLine();
+
+            boolean verificacionDniU = dni.length() == 8;
+            boolean verificacionCelularU = celular.length() == 9;
+            boolean verificacionCorreoU = correo.contains("@") && correo.endsWith(".con");
+            boolean verificacionContraseñaU = contraseña.length() >= 8 &&
+                    (contraseña.contains("#") || contraseña.contains("I") ||
+                            contraseña.contains("Q") || contraseña.contains("@"));
+
+            if(!verificacionDniU || !verificacionCelularU || !verificacionCorreoU || !verificacionContraseñaU){
+                System.out.println("No ha sido posible registrarse, vuelve a intentarlo");
+                if(!verificacionDniU){
+                    System.out.println("DNI debe tener 8 caracteres");
+                }
+                if(!verificacionCelularU){
+                    System.out.println("Celular debe tener 9 caracteres");
+                }
+                if(!verificacionCorreoU){
+                    System.out.println("Correo debe contener @ y terminar en .con");
+                }
+                if(!verificacionContraseñaU){
+                    System.out.println("Contraseña debe tener +8 caracteres y uno de: #,I,Q,@");
+                }
+
+                System.out.println("¿Desea cancelar? (si/no)");
+                String cancelar = sc.nextLine();
+                if(cancelar.equalsIgnoreCase("si")){
+                    break;
+                }
+                continue;
+            }
+
+            System.out.println("Has sido registrado exitosamente");
+            clienteNombre = nombre;
+            clienteApellido = apellidos;
+            clienteDni = dni;
+            clienteTelefono = celular;
+            clienteCorreo = correo;
+            usuarioLogueado = "Cliente Registrado (" + correo + ")";
+            registrado = true;
+
+        } while(!registrado);
+
+        return registrado;
+    }
+
+    public static void menuDeInicio(Scanner sc){
+        boolean salir = false;
+        while(!salir){
+            System.out.println("_-CHINAWOK_-");
+            System.out.println("Usuario actual: " + usuarioLogueado);
+            System.out.println("1.- Iniciar Sesion");
+            System.out.println("2.- Registrarse");
+            System.out.println("3.- Entrar como invitado");
+            System.out.println("4.- Salir");
+            System.out.print("Seleccione una opcion: ");
+
+            if (sc.hasNextInt()) {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+
+                switch(opcion){
+                    case 1:
+                        boolean exitoLogin = inicioSesion(sc);
+                        if (exitoLogin) {
+                            mostrarCategoriasChinaWok(sc);
+                        }
+                        break;
+                    case 2:
+                        registrarse(sc);
+                        break;
+                    case 3:
+                        System.out.println("Entraste como invitado");
+                        usuarioLogueado = "Invitado";
+                        mostrarCategoriasChinaWok(sc);
+                        break;
+                    case 4:
+                        System.out.println("Saliendo del sistema de ChinaWok... ¡Hasta luego!");
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Opcion invalida");
+                        break;
+                }
+            } else {
+                System.out.println("Error: Ingrese un numero entero valido.");
+                sc.nextLine();
+            }
+        }
+    }
+
+    public static void mostrarCategoriasChinaWok(Scanner sc) {
+        int opcionCategoria = 0;
+        do {
+            System.out.println("==================================================");
+            System.out.println("              MENU DE OPCIONES CHINAWOK            ");
+            System.out.println("==================================================");
+            System.out.println("1. Ver Seccion: Los Mas Vendidos");
+            System.out.println("2. Ver Seccion: Combos Personales");
+            System.out.println("3. Ver Seccion: Para Compartir");
+            System.out.println("4. Ver Seccion: Festival Mostrazo (Promociones)");
+            System.out.println("5. Regresar al Menu Principal / Cerrar Sesion");
+            System.out.print("Seleccione una opcion para desplegar los productos: ");
+
+            if (sc.hasNextInt()) {
+                opcionCategoria = sc.nextInt();
+                sc.nextLine();
+
+                switch (opcionCategoria) {
+                    case 1:
+                        menuLosMasVendidos(sc);
+                    break;
+                    case 2:
+                        menuCombosPersonales(sc);
+                    break;
+                    case 3:
+                        menuParaCompartir(sc);
+                    break;
+                    case 4:
+                        menuFestivalMostrazo(sc);
+                    break;
+                    case 5:
+                        System.out.println("Cerrando sesion y regresando...");
+                    break;
+                    default:
+                        System.out.println("Opcion invalida. Intente de nuevo.");
+                    break;
+                }
+            } else {
+                System.out.println("Por favor, ingrese un numero valido.");
+                sc.nextLine();
+            }
+        } while (opcionCategoria != 5);
+    }
+
+    public static void menuLosMasVendidos(Scanner sc) {
+        int opcionCombo = 0;
+        System.out.println("--------------------------------------------------");
+        System.out.println("      PRODUCTOS DISPONIBLES: LOS MAS VENDIDOS     ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("1. Arroz Chaufa de Pollo Clásico -                S/ 14.90");
+        System.out.println("2. Combinado Tallarín Saltado con Chaufa -        S/ 16.90");
+        System.out.println("3. Aeropuerto ChinaWok Especial -                 S/ 19.90");
+        System.out.println("4. Pollo Chijaukay con Chaufa Personal -          S/ 18.90");
+        System.out.println("5. Pollo Tipakay Agridulce con Chaufa -           S/ 18.90");
+        System.out.println("6. Wantan Frito Especial (Porción x12 unidades) - S/ 12.00");
+        System.out.println("7. Tallarín Saltado de Pollo -                    S/ 15.90");
+        System.out.println("8. Sopa Wantan Especial Gigante -                 S/ 16.50");
+        System.out.println("9. Lomo Saltado al Wok con Arroz -                S/ 23.90");
+        System.out.println("10. Banquetazo Mostrazo Simple -                  S/ 21.50");
+        System.out.println("11. Volver atrás");
+        System.out.print("Seleccione el producto que desea comprar: ");
+
+        if (sc.hasNextInt()) {
+            opcionCombo = sc.nextInt();
+            sc.nextLine();
+
+            boolean seleccionValida = true;
+            switch (opcionCombo) {
+                case 1:
+                    productoNombre = "Arroz Chaufa de Pollo Clasico";
+                    productoPrecio = 14.90;
+                    break;
+                case 2:
+                    productoNombre = "Combinado Tallarin Saltado con Chaufa";
+                    productoPrecio = 16.90;
+                    break;
+                case 3:
+                    productoNombre = "Aeropuerto ChinaWok Especial";
+                    productoPrecio = 19.90;
+                    break;
+                case 4:
+                    productoNombre = "Pollo Chijaukay con Chaufa Personal";
+                    productoPrecio = 18.90;
+                    break;
+                case 5:
+                    productoNombre = "Pollo Tipakay Agridulce con Chaufa";
+                    productoPrecio = 18.90;
+                    break;
+                case 6:
+                    productoNombre = "Wantan Frito Especial x12";
+                    productoPrecio = 12.00;
+                    break;
+                case 7:
+                    productoNombre = "Tallarin Saltado de Pollo";
+                    productoPrecio = 15.90;
+                    break;
+                case 8:
+                    productoNombre = "Sopa Wantan Especial Gigante";
+                    productoPrecio = 16.50;
+                    break;
+                case 9:
+                    productoNombre = "Lomo Saltado al Wok con Arroz";
+                    productoPrecio = 23.90;
+                    break;
+                case 10:
+                    productoNombre = "Banquetazo Mostrazo Simple";
+                    productoPrecio = 21.50;
+                    break;
+                case 11:
+                    System.out.println("Regresando...");
+                    seleccionValida = false;
+                    break;
+                default:
+                    System.out.println("Opcion no existente.");
+                    seleccionValida = false;
+                    break;
+            }
+
+            if (seleccionValida) {
+                solicitarCantidadYProcesar(sc);
+            }
+        } else {
+            System.out.println("Entrada invalida.");
+            sc.nextLine();
+        }
+    }
+
+    public static void menuCombosPersonales(Scanner sc) {
+        int opcionCombo = 0;
+        System.out.println("--------------------------------------------------");
+        System.out.println("      PRODUCTOS DISPONIBLES: COMBOS PERSONALES    ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("1. Combo Personal Chaufa + 2 Wantanes + Gaseosa -       S/ 17.90");
+        System.out.println("2. Combo Tipakay Express Individual -                   S/ 20.90");
+        System.out.println("3. Combo Chijaukay Express Individual -                 S/ 20.90");
+        System.out.println("4. Combo Aeropuerto + Gaseosa 500ml -                   S/ 22.50");
+        System.out.println("5. Duo Wok Personal (Medio Chaufa + Medio Tallarin) -   S/ 19.00");
+        System.out.println("6. Combo Kaplu Individual Especial -                    S/ 24.90");
+        System.out.println("7. Wok Express de Carne Saltada -                       S/ 25.50");
+        System.out.println("8. Combo Mini Wok (Chaufa Jr. + 2 Wantanes) -           S/ 13.90");
+        System.out.println("9. Tallarín Saltado Express Solo + Bebida -             S/ 18.50");
+        System.out.println("10. Combo Enrollado Express -                           S/ 21.00");
+        System.out.println("11. Volver atrás");
+        System.out.print("Seleccione el combo que desea comprar: ");
+
+        if (sc.hasNextInt()) {
+            opcionCombo = sc.nextInt();
+            sc.nextLine();
+
+            boolean seleccionValida = true;
+            switch (opcionCombo) {
+                case 1:
+                    productoNombre = "Combo Personal Chaufa + Wantanes + Gaseosa";
+                    productoPrecio = 17.90;
+                    break;
+                case 2:
+                    productoNombre = "Combo Tipakay Express Individual";
+                    productoPrecio = 20.90;
+                    break;
+                case 3:
+                    productoNombre = "Combo Chijaukay Express Individual";
+                    productoPrecio = 20.90;
+                    break;
+                case 4:
+                    productoNombre = "Combo Aeropuerto + Gaseosa 500ml";
+                    productoPrecio = 22.50;
+                    break;
+                case 5:
+                    productoNombre = "Duo Wok Personal";
+                    productoPrecio = 19.00;
+                    break;
+                case 6:
+                    productoNombre = "Combo Kaplu Individual Especial";
+                    productoPrecio = 24.90;
+                    break;
+                case 7:
+                    productoNombre = "Wok Express de Carne Saltada";
+                    productoPrecio = 25.50;
+                    break;
+                case 8:
+                    productoNombre = "Combo Mini Wok";
+                    productoPrecio = 13.90;
+                    break;
+                case 9:
+                    productoNombre = "Tallarin Saltado Express + Bebida";
+                    productoPrecio = 18.50;
+                    break;
+                case 10:
+                    productoNombre = "Combo Enrollado Express";
+                    productoPrecio = 21.00;
+                    break;
+                case 11:
+                    System.out.println("Regresando...");
+                    seleccionValida = false;
+                    break;
+                default:
+                    System.out.println("Opcion no existente.");
+                    seleccionValida = false;
+                    break;
+            }
+
+            if (seleccionValida) {
+                solicitarCantidadYProcesar(sc);
+            }
+        } else {
+            System.out.println("Entrada invalida.");
+            sc.nextLine();
+        }
+    }
+
+    public static void menuParaCompartir(Scanner sc) {
+        int opcionCombo = 0;
+        System.out.println("--------------------------------------------------");
+        System.out.println("       PRODUCTOS DISPONIBLES: PARA COMPARTIR      ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("1. Banquetazo Familiar (Chaufa Familiar + 4 Wantanes + Pollo Chijaukay) -   S/ 45.90");
+        System.out.println("2. Mega Combo ChinaWok Dueto (2 Chaufas + 2 Tallarines + 6 Wantanes) -      S/ 59.90");
+        System.out.println("3. Chifa Party Familiar (Chaufa familiar + Tallarín + Gaseosa 1.5L) -       S/ 69.90");
+        System.out.println("4. Combo Kamlu Familiar Real -                                              S/ 74.50");
+        System.out.println("5. Super Banquete de la Casa Imperial -                                     S/ 89.90");
+        System.out.println("6. Banquete Familiar Wok Especial Grande -                                  S/ 64.90");
+        System.out.println("7. Combo Al Gusto Familiar (1 Chaufa Grande + 2 Porciones Pollo) -          S/ 78.00");
+        System.out.println("8. Banquete Imperial Mandarín (Premium Completo) -                          S/ 115.00");
+        System.out.println("9. Banquete Gran Muralla Wok Corporativo -                                  S/ 139.90");
+        System.out.println("10. Banquete Dinastía China Mar y Tierra -                                  S/ 155.00");
+        System.out.println("11. Volver atrás");
+        System.out.print("Seleccione la opción que desea compartir: ");
+
+        if (sc.hasNextInt()) {
+            opcionCombo = sc.nextInt();
+            sc.nextLine();
+
+            boolean seleccionValida = true;
+            switch (opcionCombo) {
+                case 1:
+                    productoNombre = "Banquetazo Familiar ChinaWok";
+                    productoPrecio = 45.90;
+                    break;
+                case 2:
+                    productoNombre = "Mega Combo ChinaWok Dueto";
+                    productoPrecio = 59.90;
+                    break;
+                case 3:
+                    productoNombre = "Chifa Party Familiar";
+                    productoPrecio = 69.90;
+                    break;
+                case 4:
+                    productoNombre = "Combo Kamlu Familiar Real";
+                    productoPrecio = 74.50;
+                    break;
+                case 5:
+                    productoNombre = "Super Banquete de la Casa Imperial";
+                    productoPrecio = 89.90;
+                    break;
+                case 6:
+                    productoNombre = "Banquete Familiar Wok Especial Grande";
+                    productoPrecio = 64.90;
+                    break;
+                case 7:
+                    productoNombre = "Combo Al Gusto Familiar";
+                    productoPrecio = 78.00;
+                    break;
+                case 8:
+                    productoNombre = "Banquete Imperial Mandarin";
+                    productoPrecio = 115.00;
+                    break;
+                case 9:
+                    productoNombre = "Banquete Gran Muralla Wok";
+                    productoPrecio = 139.90;
+                    break;
+                case 10:
+                    productoNombre = "Banquete Dinastia China";
+                    productoPrecio = 155.00;
+                    break;
+                case 11:
+                    System.out.println("Regresando...");
+                    seleccionValida = false;
+                    break;
+                default:
+                    System.out.println("Opcion no existente.");
+                    seleccionValida = false;
+                    break;
+            }
+
+            if (seleccionValida) {
+                solicitarCantidadYProcesar(sc);
+            }
+        } else {
+            System.out.println("Entrada invalida.");
+            sc.nextLine();
+        }
+    }
+
+    public static void menuFestivalMostrazo(Scanner sc) {
+        int opcionCombo = 0;
+        System.out.println("--------------------------------------------------");
+        System.out.println("     PRODUCTOS DISPONIBLES: FESTIVAL MOSTRAZO     ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("1. Mostrazo Ultra Especial (Chaufa + Papas + Pollo Chijaukay) - S/ 22.90");
+        System.out.println("2. Lunes de Wantan Extremo (12 Wantanes + Cremas Especiales) -  S/ 9.90");
+        System.out.println("3. Locura Chaufera Promocional (2 Platos de Arroz Chaufa) -     S/ 22.00");
+        System.out.println("4. Chijaukay Imperial de Oferta -                               S/ 24.90");
+        System.out.println("5. Cyber Wok Nocturno Especial -                                S/ 17.90");
+        System.out.println("6. Mega Promoción Fin de Semana (3 Chaufas Personales) -        S/ 30.00");
+        System.out.println("7. Promo Parejas Wok Completa -                                 S/ 34.90");
+        System.out.println("8. Cuponera Digital Mostrazo Aeropuerto -                       S/ 25.00");
+        System.out.println("9. Mostrazo Tipakay Fest (Chaufa + Papas + Pollo Tipakay) -     S/ 22.90");
+        System.out.println("10. Gran Banquete Mostrazo de la Web -                          S/ 49.90");
+        System.out.println("11. Volver atrás");
+        System.out.print("Seleccione la promoción del festival: ");
+
+        if (sc.hasNextInt()) {
+            opcionCombo = sc.nextInt();
+            sc.nextLine();
+
+            boolean seleccionValida = true;
+            switch (opcionCombo) {
+                case 1:
+                    productoNombre = "Mostrazo Ultra Especial";
+                    productoPrecio = 22.90;
+                    break;
+                case 2:
+                    productoNombre = "Lunes de Wantan Extremo";
+                    productoPrecio = 9.90;
+                    break;
+                case 3:
+                    productoNombre = "Locura Chaufera Promocional";
+                    productoPrecio = 22.00;
+                    break;
+                case 4:
+                    productoNombre = "Chijaukay Imperial de Oferta";
+                    productoPrecio = 24.90;
+                    break;
+                case 5:
+                    productoNombre = "Cyber Wok Nocturno Especial";
+                    productoPrecio = 17.90;
+                    break;
+                case 6:
+                    productoNombre = "Mega Promocion Fin de Semana";
+                    productoPrecio = 30.00;
+                    break;
+                case 7:
+                    productoNombre = "Promo Parejas Wok Completa";
+                    productoPrecio = 34.90;
+                    break;
+                case 8:
+                    productoNombre = "Cuponera Digital Mostrazo Aeropuerto";
+                    productoPrecio = 25.00;
+                    break;
+                case 9:
+                    productoNombre = "Mostrazo Tipakay Fest";
+                    productoPrecio = 22.90;
+                    break;
+                case 10:
+                    productoNombre = "Gran Banquete Mostrazo de la Web";
+                    productoPrecio = 49.90;
+                    break;
+                case 11:
+                    System.out.println("Regresando...");
+                    seleccionValida = false;
+                    break;
+                default:
+                    System.out.println("Opcion no existente.");
+                    seleccionValida = false;
+                    break;
+            }
+
+            if (seleccionValida) {
+                solicitarCantidadYProcesar(sc);
+            }
+        }
+        else {
+            System.out.println("Entrada invalida.");
+            sc.nextLine();
+        }
+    }
+
+    public static void solicitarCantidadYProcesar(Scanner sc) {
+        boolean cantidadCorrecta = false;
+
+        do {
+            System.out.print("¿Cuantas unidades de este producto desea llevar?: ");
+            if (sc.hasNextInt()) {
+                cantidadLlevar = sc.nextInt();
+                sc.nextLine();
+
+                if (cantidadLlevar <= 0) {
+                    System.out.println("Error: No se permiten cantidades menores o iguales a cero. Reintente.");
+                } else if (cantidadLlevar > 25) {
+                    System.out.println("Aviso: Por politicas de la tienda, el limite maximo por orden es de 25 unidades.");
+                    System.out.println("¿Desea reajustar su pedido? (si/no)");
+                    String respuesta = sc.nextLine();
+                    if (respuesta.equalsIgnoreCase("no")) {
+                        System.out.println("Pedido cancelado de forma correcta.");
+                        break;
+                    }
+                } else {
+                    System.out.println("Cantidad registrada de forma exitosa: " + cantidadLlevar + " unidades.");
+                    cantidadCorrecta = true;
+
+                    subtotalCompra = productoPrecio * cantidadLlevar;
+                    totalPagar = subtotalCompra;
+
+                    System.out.println("--------------------------------------------------");
+                    System.out.println("              CALCULO DE PRECIOS WOK              ");
+                    System.out.println("--------------------------------------------------");
+                    System.out.println("Producto          : " + productoNombre);
+                    System.out.println("Precio Unitario   : S/ " + productoPrecio);
+                    System.out.println("Cantidad Pedida   : " + cantidadLlevar);
+                    System.out.println("TOTAL BRUTO COMPRA: S/ " + subtotalCompra);
+                    System.out.println("--------------------------------------------------");
+                    System.out.print("¿Desea confirmar el monto y proceder a la facturacion? (si/no): ");
+                    String confirmar = sc.nextLine();
+
+                    if (!confirmar.equalsIgnoreCase("si")) {
+                        System.out.println("Monto rechazado. Cancelando transaccion...");
+                        break;
+                    }
+
+                    System.out.println("--------------------------------------------------");
+                    System.out.println("        INGRESE DATOS PARA LA VALIDACION          ");
+                    System.out.println("--------------------------------------------------");
+
+                    if (clienteNombre.equals("") || clienteDni.equals("")) {
+                        System.out.print("Ingrese Correo Electronico: ");
+                        clienteCorreo = sc.nextLine();
+                        System.out.print("Ingrese Primer y Segundo Nombre: ");
+                        clienteNombre = sc.nextLine();
+                        System.out.print("Ingrese Apellidos Completos: ");
+                        clienteApellido = sc.nextLine();
+                        System.out.print("Ingrese Numero de DNI (8 digitos): ");
+                        clienteDni = sc.nextLine();
+                        System.out.print("Ingrese Numero de Telefono Movil: ");
+                        clienteTelefono = sc.nextLine();
+                    } else {
+                        System.out.println("[SISTEMA] Autocompletando datos desde su cuenta activa...");
+                        System.out.println("Cliente: " + clienteNombre + " " + clienteApellido);
+                        System.out.println("DNI    : " + clienteDni);
+                        System.out.println("Correo : " + clienteCorreo);
+                    }
+
+                    System.out.print("Ingrese la direccion actual del domicilio: ");
+                    clienteDireccion = sc.nextLine();
+
+                    int opcionTienda = 0;
+                    boolean tiendaValida = false;
+                    do {
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("         SELECCIONE LA TIENDA DE RECOJO           ");
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("1. ChinaWok - Sede Principal Juliaca");
+                        System.out.println("2. ChinaWok - Mall Arequipa Center (Cerro Colorado)");
+                        System.out.println("3. ChinaWok - Real Plaza Arequipa");
+                        System.out.println("4. ChinaWok - Mallplaza Bellavista");
+                        System.out.println("5. ChinaWok - Plaza Norte Lima");
+                        System.out.print("Seleccione la sucursal de preferencia (1-5): ");
+
+                        if (sc.hasNextInt()) {
+                            opcionTienda = sc.nextInt();
+                            sc.nextLine();
+
+                            switch (opcionTienda) {
+                                case 1:
+                                    tiendaSeleccionada = "ChinaWok - Sede Principal Juliaca"; tiendaValida = true;
+                                    break;
+                                case 2:
+                                    tiendaSeleccionada = "ChinaWok - Mall Arequipa Center (Cerro Colorado)"; tiendaValida = true;
+                                    break;
+                                case 3:
+                                    tiendaSeleccionada = "ChinaWok - Real Plaza Arequipa"; tiendaValida = true;
+                                    break;
+                                case 4:
+                                    tiendaSeleccionada = "ChinaWok - Mallplaza Bellavista"; tiendaValida = true;
+                                    break;
+                                case 5:
+                                    tiendaSeleccionada = "ChinaWok - Plaza Norte Lima"; tiendaValida = true;
+                                    break;
+                                default: System.out.println("Error: Opcion de tienda no habilitada.");
+                                break;
+                            }
+                        } else {
+                            System.out.println("Formato incorrecto. Ingrese un digito del 1 al 5.");
+                            sc.nextLine();
+                        }
+                    } while (!tiendaValida);
+
+                    int opcionPago = 0;
+                    boolean pagoValido = false;
+
+                    do {
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("              SELECCIONE METODO DE PAGO           ");
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("1. Efectivo (Pago en caja)");
+                        System.out.println("2. Tarjeta de Credito / Debito");
+                        System.out.println("3. Yape / Plin (Billetera Digital)");
+                        System.out.print("Seleccione una opción: ");
+
+                        if (sc.hasNextInt()) {
+                            opcionPago = sc.nextInt();
+                            sc.nextLine();
+
+                            switch (opcionPago) {
+                                case 1:
+                                    metodoPagoSeleccionado = "Efectivo"; pagoValido = true;
+                                    break;
+                                case 2:
+                                    metodoPagoSeleccionado = "Tarjeta"; pagoValido = true;
+                                    break;
+                                case 3:
+                                    metodoPagoSeleccionado = "Yape/Plin"; pagoValido = true;
+                                    break;
+                                default: System.out.println("Opcion no valida.");
+                                break;
+                            }
+                        } else {
+                            System.out.println("Entrada invalida.");
+                            sc.nextLine();
+                        }
+                    } while (!pagoValido);
+
+                    System.out.println("==================================================");
+                    System.out.println("             RESUMEN DE SU PEDIDO                 ");
+                    System.out.println("==================================================");
+                    System.out.println("Cliente: " + clienteNombre + " " + clienteApellido);
+                    System.out.println("Producto: " + productoNombre + " (x" + cantidadLlevar + ")");
+                    System.out.println("Total a pagar: S/ " + subtotalCompra);
+                    System.out.println("Tienda de recojo: " + tiendaSeleccionada);
+                    System.out.println("Metodo de pago: " + metodoPagoSeleccionado);
+                    System.out.println("Direccion de entrega: " + clienteDireccion);
+                    System.out.println("==================================================");
+                    System.out.println("¡Muchas gracias por su compra en ChinaWok!");
+
+                }
+            } else {
+                System.out.println("Error: Ingrese un numero entero para la cantidad.");
+                sc.nextLine();
+            }
+        } while (!cantidadCorrecta);
+    }
+}
